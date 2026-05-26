@@ -233,6 +233,15 @@ LAST="$(python3 -c 'import json; print(json.load(open("/tmp/repo.json", encoding
 
 Con eso el YAML volvio a parsear correctamente.
 
+El segundo fallo ya fue del chequeo real del portfolio:
+
+```text
+[FAIL] TP01 devops-TP01 sin README (HTTP 404)
+Errores: 1
+```
+
+Interpretacion: el repo TP01 existia, pero GitHub Actions buscaba `README.md` y el repo solo tenia un archivo `README` sin extension. Agregue `README.md` al repo `devops-TP01` y volvi a correr el workflow.
+
 Mensaje relevante:
 
 ```text
@@ -248,6 +257,19 @@ https://github.com/trepiol/devops-TP08
 ```
 
 Interpretacion: se corrigio el unico hueco detectado en los repos del portfolio antes de publicar el TP12.
+
+Evidencia final de GitHub Actions:
+
+```text
+Run: 26469533315
+Workflow: Portfolio Health Check
+Verificar repos del portfolio: OK
+Lint del README principal: OK
+Generar resumen del portfolio: OK
+Conclusion: success
+```
+
+La advertencia sobre Node.js 20 en `actions/checkout@v4` no rompe el pipeline. Es un aviso de deprecacion futura de GitHub Actions.
 
 ## Desvios o cambios respecto de la guia
 

@@ -1,0 +1,26 @@
+
+✓ main Portfolio Health Check · 26469533315
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+✓ Verificar repos del portfolio in 13s (ID 77938914903)
+✓ Lint del README principal in 16s (ID 77938914962)
+✓ Generar resumen del portfolio in 5s (ID 77938970125)
+
+ANNOTATIONS
+! Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Verificar repos del portfolio: .github#2
+
+! Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Lint del README principal: .github#2
+
+! Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Generar resumen del portfolio: .github#2
+
+
+For more information about a job, try: gh run view --job=<job-id>
+View this run on GitHub: https://github.com/trepiol/devops-portfolio/actions/runs/26469533315
+completed	success	Portfolio Health Check	Portfolio Health Check	main	workflow_dispatch	26469533315	30s	2026-05-26T19:13:05Z
+completed	failure	Portfolio Health Check	Portfolio Health Check	main	workflow_dispatch	26469486461	12s	2026-05-26T19:12:08Z
+completed	failure	portfolio: corregir workflow de health check	Portfolio Health Check	main	push	26469473223	17s	2026-05-26T19:11:50Z
+completed	failure	portfolio: README final con pipeline de validacion	Portfolio Health Check	main	push	26469395407	0s	2026-05-26T19:10:16Z

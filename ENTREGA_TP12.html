@@ -156,10 +156,21 @@ This run likely failed because of a workflow file issue.</pre>
   <p><strong>Interpretacion:</strong> no era un problema de los repos del portfolio. Era un problema de sintaxis YAML en el workflow. El heredoc de Python dentro del bloque <code>run</code> quedo sin indentacion valida para YAML.</p>
   <pre>LAST="$(python3 -c 'import json; print(json.load(open("/tmp/repo.json", encoding="utf-8")).get("pushed_at", "?")[:10])')"</pre>
   <p>Con eso el YAML volvio a parsear correctamente.</p>
+  <p>El segundo fallo ya fue del chequeo real del portfolio:</p>
+  <pre>[FAIL] TP01 devops-TP01 sin README (HTTP 404)
+Errores: 1</pre>
+  <p><strong>Interpretacion:</strong> el repo TP01 existia, pero GitHub Actions buscaba <code>README.md</code> y el repo solo tenia un archivo <code>README</code> sin extension. Agregue <code>README.md</code> al repo <code>devops-TP01</code> y volvi a correr el workflow.</p>
   <pre>Portfolio OK</pre>
   <p>Significa que pasaron todos los checks locales: identidad Git, archivos obligatorios, secciones del README, repos remotos y estructura del workflow.</p>
   <pre>https://github.com/trepiol/devops-TP08</pre>
   <p>Este resultado confirma que se corrigio el unico hueco detectado en los repos del portfolio antes de publicar el TP12.</p>
+  <pre>Run: 26469533315
+Workflow: Portfolio Health Check
+Verificar repos del portfolio: OK
+Lint del README principal: OK
+Generar resumen del portfolio: OK
+Conclusion: success</pre>
+  <p>La advertencia sobre Node.js 20 en <code>actions/checkout@v4</code> no rompe el pipeline. Es un aviso de deprecacion futura de GitHub Actions.</p>
 
   <h2>Desvios o cambios respecto de la guia</h2>
   <ul>
