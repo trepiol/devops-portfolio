@@ -51,13 +51,7 @@ jobs:
             CODE="$(curl -s -o /tmp/repo.json -w "%{http_code}" "$URL")"
 
             if [ "$CODE" = "200" ]; then
-              LAST="$(python3 - <<'PY'
-import json
-with open('/tmp/repo.json', encoding='utf-8') as fh:
-    data = json.load(fh)
-print(data.get('pushed_at', '?')[:10])
-PY
-)"
+              LAST="$(python3 -c 'import json; print(json.load(open("/tmp/repo.json", encoding="utf-8")).get("pushed_at", "?")[:10])')"
               README_CODE="$(curl -s -o /dev/null -w "%{http_code}" "$URL/contents/README.md")"
               if [ "$README_CODE" = "200" ]; then
                 echo "  [OK]  $TP $REPO README OK"

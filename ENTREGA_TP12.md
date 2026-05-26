@@ -214,7 +214,24 @@ Portfolio OK
 
 Interpretacion: el script confirma que el portfolio tiene los archivos pedidos, el README contiene las secciones principales, los repos remotos existen y el usuario Git configurado es el correcto.
 
-## Error o exito relevante interpretado
+## Error y exito relevante interpretados
+
+El primer push disparo GitHub Actions, pero fallo inmediatamente:
+
+```text
+completed failure .github/workflows/portfolio-check.yml
+This run likely failed because of a workflow file issue.
+```
+
+Interpretacion: no era un problema de los repos del portfolio. Era un problema de sintaxis YAML en el workflow. El heredoc de Python dentro del bloque `run` quedo sin indentacion valida para YAML.
+
+Correccion aplicada:
+
+```bash
+LAST="$(python3 -c 'import json; print(json.load(open("/tmp/repo.json", encoding="utf-8")).get("pushed_at", "?")[:10])')"
+```
+
+Con eso el YAML volvio a parsear correctamente.
 
 Mensaje relevante:
 

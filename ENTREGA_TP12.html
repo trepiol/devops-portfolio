@@ -149,7 +149,13 @@ docs/portfolio-checklist.md</pre>
 
 Portfolio OK</pre>
 
-  <h2>Error o exito relevante interpretado</h2>
+  <h2>Error y exito relevante interpretados</h2>
+  <p>El primer push disparo GitHub Actions, pero fallo inmediatamente:</p>
+  <pre>completed failure .github/workflows/portfolio-check.yml
+This run likely failed because of a workflow file issue.</pre>
+  <p><strong>Interpretacion:</strong> no era un problema de los repos del portfolio. Era un problema de sintaxis YAML en el workflow. El heredoc de Python dentro del bloque <code>run</code> quedo sin indentacion valida para YAML.</p>
+  <pre>LAST="$(python3 -c 'import json; print(json.load(open("/tmp/repo.json", encoding="utf-8")).get("pushed_at", "?")[:10])')"</pre>
+  <p>Con eso el YAML volvio a parsear correctamente.</p>
   <pre>Portfolio OK</pre>
   <p>Significa que pasaron todos los checks locales: identidad Git, archivos obligatorios, secciones del README, repos remotos y estructura del workflow.</p>
   <pre>https://github.com/trepiol/devops-TP08</pre>
