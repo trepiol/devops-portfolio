@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>TP12 - Portfolio final DevOps</title>
+  <style>
+    @page { size: A4; margin: 1.45cm; }
+    body { font-family: "Liberation Sans", Arial, sans-serif; color: #111827; line-height: 1.35; }
+    h1 { font-size: 25px; border-bottom: 2px solid #111827; padding-bottom: 8px; }
+    h2 { font-size: 17px; margin-top: 22px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px; }
+    code, pre { font-family: "Liberation Mono", Consolas, monospace; font-size: 8.8pt; }
+    pre { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 8px; white-space: pre-wrap; }
+    table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; }
+    th, td { border: 1px solid #cbd5e1; padding: 6px; vertical-align: top; }
+    th { background: #e2e8f0; }
+    .nota { background: #fff7ed; border-left: 4px solid #f97316; padding: 8px 10px; }
+    .ok { background: #ecfdf5; border-left: 4px solid #10b981; padding: 8px 10px; }
+  </style>
+</head>
+<body>
+  <h1>TP12 - Portfolio final DevOps</h1>
+
+  <h2>Datos del trabajo</h2>
+  <table>
+    <tr><th>Dato</th><th>Valor</th></tr>
+    <tr><td>Equipo y usuario</td><td><code>eze@cuya</code></td></tr>
+    <tr><td>Carpeta</td><td><code>/home/eze/Documentos/operaciones/tp12</code></td></tr>
+    <tr><td>Repositorio remoto</td><td><code>https://github.com/trepiol/devops-portfolio</code></td></tr>
+    <tr><td>Usuario Git</td><td><code>trepio &lt;ezequiel.cuya@estudiantes.unahur.edu.ar&gt;</code></td></tr>
+    <tr><td>Fecha</td><td><code>2026-05-26</code></td></tr>
+  </table>
+
+  <h2>Objetivo</h2>
+  <p>En este TP arme el portfolio final del recorrido DevOps: repositorio central, README principal, workflow de GitHub Actions, README de perfil y documentacion de apoyo.</p>
+
+  <h2>Paso 1 - Revise los repos existentes</h2>
+  <pre>eze@cuya:~/Documentos/operaciones$ gh repo list trepiol --limit 100 --json name,url,defaultBranchRef</pre>
+  <pre>devops-TP01      https://github.com/trepiol/devops-TP01      main
+devops-TP02      https://github.com/trepiol/devops-TP02      main
+devops-TP04      https://github.com/trepiol/devops-TP04      main
+devops-TP05      https://github.com/trepiol/devops-TP05      main
+devops-TP06      https://github.com/trepiol/devops-TP06      main
+devops-TP09      https://github.com/trepiol/devops-TP09      main
+devops-TP10      https://github.com/trepiol/devops-TP10      main
+devops-TP11      https://github.com/trepiol/devops-TP11      main
+devops-gitflow   https://github.com/trepiol/devops-gitflow   main</pre>
+  <p>El TP03 estaba como <code>devops-gitflow</code>, y el TP07 forma parte de <code>devops-TP06</code>.</p>
+
+  <h2>Paso 2 - Complete el repo faltante de TP08</h2>
+  <pre>eze@cuya:~/Documentos/operaciones/devops-TP08$ git init
+eze@cuya:~/Documentos/operaciones/devops-TP08$ git config user.name trepio
+eze@cuya:~/Documentos/operaciones/devops-TP08$ git config user.email ezequiel.cuya@estudiantes.unahur.edu.ar
+eze@cuya:~/Documentos/operaciones/devops-TP08$ git add .
+eze@cuya:~/Documentos/operaciones/devops-TP08$ git commit -m 'TP08: respaldo de monitoreo para portfolio'
+eze@cuya:~/Documentos/operaciones/devops-TP08$ gh repo create devops-TP08 --public --source=. --remote=origin --push</pre>
+  <pre>https://github.com/trepiol/devops-TP08
+To github.com:trepiol/devops-TP08.git
+ * [new branch]      HEAD -> main</pre>
+  <p class="ok"><strong>Interpretacion:</strong> ahora el portfolio puede apuntar a un repo real para TP08 y el pipeline puede validarlo.</p>
+
+  <h2>Paso 3 - Cree el repo central del portfolio</h2>
+  <pre>eze@cuya:~/Documentos/operaciones$ mkdir -p tp12/.github/workflows tp12/docs tp12/scripts
+eze@cuya:~/Documentos/operaciones$ cd tp12</pre>
+  <pre>tp12/
+|-- README.md
+|-- LICENSE
+|-- .github/workflows/portfolio-check.yml
+|-- docs/profile-readme.md
+|-- docs/interview-notes.md
+|-- docs/portfolio-checklist.md
+|-- scripts/verificar.sh
+|-- ENTREGA_TP12.md
+|-- ENTREGA_TP12.html
+`-- ENTREGA_TP12.pdf</pre>
+
+  <h2>Paso 4 - README principal</h2>
+  <p>El <code>README.md</code> quedo como carta de presentacion del portfolio. Incluye stack tecnologico, links reales a los TPs, separacion por etapas, proyecto integrador Notes App, plataformas usadas y referencia al workflow de validacion.</p>
+  <pre>TP03 -> https://github.com/trepiol/devops-gitflow
+TP06 -> https://github.com/trepiol/devops-TP06
+TP08 -> https://github.com/trepiol/devops-TP08
+TP11 -> https://github.com/trepiol/devops-TP11
+TP12 -> https://github.com/trepiol/devops-portfolio</pre>
+
+  <h2>Paso 5 - Pipeline de GitHub Actions</h2>
+  <p>Archivo: <code>.github/workflows/portfolio-check.yml</code></p>
+  <table>
+    <tr><th>Job</th><th>Funcion</th></tr>
+    <tr><td><code>check-repos</code></td><td>Verifica que los repos existan y tengan README.</td></tr>
+    <tr><td><code>lint-readme</code></td><td>Verifica secciones obligatorias del README central.</td></tr>
+    <tr><td><code>generate-summary</code></td><td>Genera un resumen del portfolio en GitHub Actions.</td></tr>
+  </table>
+  <pre>REPOS=(
+  "TP01:devops-TP01"
+  "TP02:devops-TP02"
+  "TP03:devops-gitflow"
+  "TP04:devops-TP04"
+  "TP05:devops-TP05"
+  "TP06:devops-TP06"
+  "TP07:devops-TP06"
+  "TP08:devops-TP08"
+  "TP09:devops-TP09"
+  "TP10:devops-TP10"
+  "TP11:devops-TP11"
+  "TP12:devops-portfolio"
+)</pre>
+
+  <h2>Paso 6 - README de perfil y docs extra</h2>
+  <pre>docs/profile-readme.md
+docs/interview-notes.md
+docs/portfolio-checklist.md</pre>
+  <p>El <code>profile-readme.md</code> sirve como base para el README del perfil de GitHub. <code>interview-notes.md</code> resume preguntas que puedo defender y <code>portfolio-checklist.md</code> deja los puntos de control del portfolio.</p>
+
+  <h2>Paso 7 - Verificacion local del portfolio</h2>
+  <pre>eze@cuya:~/Documentos/operaciones/tp12$ bash scripts/verificar.sh</pre>
+  <pre>=== Verificacion Portfolio - TP12 ===
+
+--- Git ---
+  [OK]   Git user: trepio &lt;ezequiel.cuya@estudiantes.unahur.edu.ar&gt;
+
+--- Archivos del portfolio ---
+  [OK]   README.md existe
+  [OK]   .github/workflows/portfolio-check.yml existe
+  [OK]   docs/profile-readme.md existe
+  [OK]   docs/interview-notes.md existe
+  [OK]   docs/portfolio-checklist.md existe
+
+--- Secciones del README ---
+  [OK]   Seccion: Sobre este portfolio
+  [OK]   Seccion: Stack tecnologico
+  [OK]   Seccion: Proyectos por TP
+  [OK]   Seccion: Proyecto integrador
+  [OK]   Seccion: Pipeline del portfolio
+  [OK]   Seccion: Plataformas usadas
+
+--- Repos remotos ---
+  [OK]   trepiol/devops-TP01 existe
+  [OK]   trepiol/devops-TP02 existe
+  [OK]   trepiol/devops-gitflow existe
+  [OK]   trepiol/devops-TP04 existe
+  [OK]   trepiol/devops-TP05 existe
+  [OK]   trepiol/devops-TP06 existe
+  [OK]   trepiol/devops-TP08 existe
+  [OK]   trepiol/devops-TP09 existe
+  [OK]   trepiol/devops-TP10 existe
+  [OK]   trepiol/devops-TP11 existe
+
+--- Workflow YAML ---
+  [OK]   portfolio-check.yml contiene los jobs esperados
+
+Portfolio OK</pre>
+
+  <h2>Error o exito relevante interpretado</h2>
+  <pre>Portfolio OK</pre>
+  <p>Significa que pasaron todos los checks locales: identidad Git, archivos obligatorios, secciones del README, repos remotos y estructura del workflow.</p>
+  <pre>https://github.com/trepiol/devops-TP08</pre>
+  <p>Este resultado confirma que se corrigio el unico hueco detectado en los repos del portfolio antes de publicar el TP12.</p>
+
+  <h2>Desvios o cambios respecto de la guia</h2>
+  <ul>
+    <li>Use <code>tp12</code> como carpeta local en vez de <code>~/devops-portfolio</code>.</li>
+    <li>El remoto si se llama <code>devops-portfolio</code>.</li>
+    <li>Para TP03 use <code>devops-gitflow</code> porque ese es el repo real publicado.</li>
+    <li>Para TP07 apunte a <code>devops-TP06</code>, porque el pipeline CI/CD esta dentro de ese repo.</li>
+    <li>Cree <code>devops-TP08</code> porque faltaba como repo publico.</li>
+    <li>Reemplace todos los placeholders por <code>trepiol</code>.</li>
+  </ul>
+
+  <h2>Version 2 propuesta</h2>
+  <pre>gh repo list trepiol --limit 100
+bash scripts/verificar.sh
+git status --short
+git add .
+git commit -m 'portfolio: README final con pipeline de validacion'
+git push</pre>
+  <p><strong>Justificacion tecnica:</strong> validar antes del push evita publicar links rotos o un README incompleto.</p>
+  <pre>workflow_dispatch:
+schedule:
+  - cron: "0 9 * * 1"
+push:
+  branches:
+    - main</pre>
+  <p><strong>Justificacion tecnica:</strong> <code>workflow_dispatch</code> permite correr el check manualmente, <code>schedule</code> revisa el portfolio una vez por semana, y <code>push</code> evita subir cambios que rompan el README o los links.</p>
+
+  <h2>Novedades o sorpresas</h2>
+  <ul>
+    <li>Me sorprendio ver que el TP07 no necesitaba repo propio porque vive dentro del TP06.</li>
+    <li>Fue una novedad que el portfolio tambien se pueda validar con un pipeline.</li>
+    <li>Me resulto importante detectar el repo faltante de TP08 antes de entregar.</li>
+    <li>Tambien me quedo mas claro que un portfolio tecnico tiene que mostrar evidencia verificable.</li>
+  </ul>
+
+  <h2>Cierre</h2>
+  <p>El TP12 quedo armado como portfolio final. Tiene README central, links reales a todos los trabajos, workflow de validacion, README de perfil, checklist, script local de verificacion y evidencia del usuario Git correcto.</p>
+</body>
+</html>

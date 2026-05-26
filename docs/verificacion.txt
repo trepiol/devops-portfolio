@@ -1,0 +1,36 @@
+=== Verificacion Portfolio - TP12 ===
+
+--- Git ---
+  [OK]   Git user: trepio <ezequiel.cuya@estudiantes.unahur.edu.ar>
+
+--- Archivos del portfolio ---
+  [OK]   README.md existe
+  [OK]   .github/workflows/portfolio-check.yml existe
+  [OK]   docs/profile-readme.md existe
+  [OK]   docs/interview-notes.md existe
+  [OK]   docs/portfolio-checklist.md existe
+
+--- Secciones del README ---
+  [OK]   Seccion: Sobre este portfolio
+  [OK]   Seccion: Stack tecnologico
+  [OK]   Seccion: Proyectos por TP
+  [OK]   Seccion: Proyecto integrador
+  [OK]   Seccion: Pipeline del portfolio
+  [OK]   Seccion: Plataformas usadas
+
+--- Repos remotos ---
+  [OK]   trepiol/devops-TP01 existe
+  [OK]   trepiol/devops-TP02 existe
+  [OK]   trepiol/devops-gitflow existe
+  [OK]   trepiol/devops-TP04 existe
+  [OK]   trepiol/devops-TP05 existe
+  [OK]   trepiol/devops-TP06 existe
+  [OK]   trepiol/devops-TP08 existe
+  [OK]   trepiol/devops-TP09 existe
+  [OK]   trepiol/devops-TP10 existe
+  [OK]   trepiol/devops-TP11 existe
+
+--- Workflow YAML ---
+  [OK]   portfolio-check.yml contiene los jobs esperados
+
+Portfolio OK

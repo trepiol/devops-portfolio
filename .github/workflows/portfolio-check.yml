@@ -1,0 +1,123 @@
+name: Portfolio Health Check
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-repos:
+    name: Verificar repos del portfolio
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout portfolio
+        uses: actions/checkout@v4
+
+      - name: Verificar repos y README
+        env:
+          USUARIO: ${{ github.repository_owner }}
+        run: |
+          set -uo pipefail
+          REPOS=(
+            "TP01:devops-TP01"
+            "TP02:devops-TP02"
+            "TP03:devops-gitflow"
+            "TP04:devops-TP04"
+            "TP05:devops-TP05"
+            "TP06:devops-TP06"
+            "TP07:devops-TP06"
+            "TP08:devops-TP08"
+            "TP09:devops-TP09"
+            "TP10:devops-TP10"
+            "TP11:devops-TP11"
+            "TP12:devops-portfolio"
+          )
+          ERRORES=0
+
+          echo "### Estado del portfolio" >> "$GITHUB_STEP_SUMMARY"
+          echo "| TP | Repo | Estado | Ultimo commit |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| --- | --- | --- | --- |" >> "$GITHUB_STEP_SUMMARY"
+
+          for ITEM in "${REPOS[@]}"; do
+            TP="${ITEM%%:*}"
+            REPO="${ITEM#*:}"
+            URL="https://api.github.com/repos/$USUARIO/$REPO"
+            CODE="$(curl -s -o /tmp/repo.json -w "%{http_code}" "$URL")"
+
+            if [ "$CODE" = "200" ]; then
+              LAST="$(python3 - <<'PY'
+import json
+with open('/tmp/repo.json', encoding='utf-8') as fh:
+    data = json.load(fh)
+print(data.get('pushed_at', '?')[:10])
+PY
+)"
+              README_CODE="$(curl -s -o /dev/null -w "%{http_code}" "$URL/contents/README.md")"
+              if [ "$README_CODE" = "200" ]; then
+                echo "  [OK]  $TP $REPO README OK"
+                echo "| $TP | $REPO | activo | $LAST |" >> "$GITHUB_STEP_SUMMARY"
+              else
+                echo "  [FAIL] $TP $REPO sin README (HTTP $README_CODE)"
+                echo "| $TP | $REPO | sin README | $LAST |" >> "$GITHUB_STEP_SUMMARY"
+                ERRORES=$((ERRORES + 1))
+              fi
+            else
+              echo "  [FAIL] $TP $REPO no encontrado (HTTP $CODE)"
+              echo "| $TP | $REPO | no encontrado | - |" >> "$GITHUB_STEP_SUMMARY"
+              ERRORES=$((ERRORES + 1))
+            fi
+          done
+
+          echo "Total entradas verificadas: ${#REPOS[@]}"
+          echo "Errores: $ERRORES"
+          [ "$ERRORES" -eq 0 ]
+
+  lint-readme:
+    name: Lint del README principal
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout portfolio
+        uses: actions/checkout@v4
+
+      - name: Verificar secciones obligatorias
+        run: |
+          set -euo pipefail
+          SECCIONES=(
+            "Sobre este portfolio"
+            "Stack tecnologico"
+            "Proyectos por TP"
+            "Proyecto integrador"
+            "Pipeline del portfolio"
+            "Plataformas usadas"
+          )
+
+          for SEC in "${SECCIONES[@]}"; do
+            grep -q "$SEC" README.md
+            echo "  [OK]  Seccion: $SEC"
+          done
+          echo "README completo"
+
+  generate-summary:
+    name: Generar resumen del portfolio
+    runs-on: ubuntu-latest
+    needs:
+      - check-repos
+      - lint-readme
+    steps:
+      - name: Checkout portfolio
+        uses: actions/checkout@v4
+
+      - name: Generar stats
+        run: |
+          echo "## Portfolio Stats - $(date '+%Y-%m-%d')" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- TPs completados: 12 / 12" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Repos verificados: 12 entradas" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Inversion total: 0 USD" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Resultado: pipeline corrido exitosamente" >> "$GITHUB_STEP_SUMMARY"
